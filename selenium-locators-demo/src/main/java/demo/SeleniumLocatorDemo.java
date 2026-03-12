@@ -13,7 +13,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class SeleniumLocatorDemo {
 
   // Visual pause between demo sections (ms).
-  private static final int STEP_PAUSE = 3500;
+  private static final int STEP_PAUSE = 10000;
 
   // Overlay panel element ID injected into each page.
   private static final String OVERLAY_ID = "__selenium_demo_overlay__";
@@ -51,6 +51,7 @@ public class SeleniumLocatorDemo {
       // ── DEMO 2 ─────────────────────────────────────────────────────────────
       // Locator hierarchy — same element found four different ways.
       // ───────────────────────────────────────────────────────────────────────
+      transition(driver, "[DEMO 2] Locator hierarchy");
       driver.get("https://the-internet.herokuapp.com/login");
       createOverlay(driver);
 
@@ -84,33 +85,40 @@ public class SeleniumLocatorDemo {
       // ── DEMO 3 ─────────────────────────────────────────────────────────────
       // Fragile vs robust selector.
       // ───────────────────────────────────────────────────────────────────────
+      transition(driver, "[DEMO 3] Fragile vs robust selector");
       driver.get("https://the-internet.herokuapp.com/login");
       createOverlay(driver);
 
       String d3Title = "[DEMO 3] Fragile vs robust selector";
       banner(d3Title);
 
+      // Show the FRAGILE locator — an absolute XPath that currently works
+      // but breaks if any surrounding element is added, removed, or reordered.
+      String fragileXPath = "/html/body/div[2]/div/div/form/div/input";
+      String fragileMsg = "DEMO 3 — FRAGILE SELECTOR\n\n"
+                        + "XPath: /html/body/div[2]/div/div/form/div/input\n\n"
+                        + "Absolute XPath depends on DOM structure.\n"
+                        + "Small layout changes can break this locator.";
+      System.out.println("  [FRAGILE]  By.xpath(\"" + fragileXPath + "\")");
+      System.out.println("             Absolute path — depends entirely on DOM structure.");
+      System.out.println("             Any layout change will silently break this locator.");
+      updateOverlay(driver, d3Title, fragileMsg);
       try {
-        WebElement fragile = driver.findElement(
-            By.xpath("/html/body/div[2]/div/form/input[1]"));
-        String fragileMsg = "FRAGILE XPath:\n/html/body/div[2]/div/form/input[1]\n\n"
-                          + "Absolute path — breaks on any\nstructural DOM change.";
-        System.out.println("  [FRAGILE]  By.xpath(\"/html/body/div[2]/div/form/input[1]\")");
-        System.out.println("             Absolute path — breaks on any structural DOM change.");
-        updateOverlay(driver, d3Title, fragileMsg);
+        WebElement fragile = driver.findElement(By.xpath(fragileXPath));
         highlightElement(driver, fragile);
-        pause(2000);
       } catch (Exception ex) {
-        System.out.println("  [FRAGILE]  Absolute XPath — element NOT found. This demonstrates fragility.");
-        updateOverlay(driver, d3Title,
-            "FRAGILE XPath: element NOT found!\n\nAbsolute paths break on DOM changes.\nThis IS the point.");
-        pause(2000);
+        System.out.println("  [FRAGILE]  XPath did not match — page structure may have changed.");
       }
+      pause(STEP_PAUSE);
 
-      WebElement robust = driver.findElement(By.id("username"));
-      String robustMsg = "ROBUST locator:\nBy.id(\"username\")\n\nSemantic, stable,\nindependent of DOM structure.";
-      System.out.println("  [ROBUST]   By.id(\"username\") — semantic, stable, readable.");
+      // Now locate the same element with a robust, semantic locator.
+      String robustMsg = "ROBUST SELECTOR\n\n"
+                       + "By.id(\"username\")\n\n"
+                       + "Using a stable attribute (id) makes the locator\n"
+                       + "readable, reliable, and maintainable.";
+      System.out.println("  [ROBUST]   By.id(\"username\") — semantic, stable, independent of DOM structure.");
       updateOverlay(driver, d3Title, robustMsg);
+      WebElement robust = driver.findElement(By.id("username"));
       highlightElement(driver, robust);
       pause(STEP_PAUSE);
 
@@ -118,6 +126,7 @@ public class SeleniumLocatorDemo {
       // findElements: returns a List — empty if nothing matches, never throws.
       // SelectorsHub practice page has many inputs: ideal for this concept.
       // ───────────────────────────────────────────────────────────────────────
+      transition(driver, "[DEMO 4] findElements — multiple nodes");
       driver.get("https://selectorshub.com/xpath-practice-page/");
       createOverlay(driver);
 
@@ -252,6 +261,22 @@ public class SeleniumLocatorDemo {
   }
 
   // ── Console helpers ───────────────────────────────────────────────────────
+
+  /**
+   * Displays a "NEXT DEMONSTRATION" transition message in the overlay
+   * and pauses briefly before the next demo begins.
+   * Safe to call before driver.get() — uses the previous page's overlay.
+   */
+  private static void transition(WebDriver driver, String nextTitle) {
+    try {
+      updateOverlay(driver,
+          "NEXT DEMONSTRATION",
+          "Coming up:\n" + nextTitle);
+    } catch (Exception ignored) {
+      // Overlay may not exist on the very first call — that is fine.
+    }
+    pause(2000);
+  }
 
   private static void banner(String title) {
     System.out.println("\n══════════════════════════════════════════════════════");
