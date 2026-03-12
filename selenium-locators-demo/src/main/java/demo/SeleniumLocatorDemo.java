@@ -78,7 +78,7 @@ public class SeleniumLocatorDemo {
             "Localizando el mismo elemento de cuatro formas:\n\n  → " + locatorLabels[i]);
         WebElement el = driver.findElement(locators[i]);
         highlightElement(driver, el);
-        pause(800);
+        pause(2000);
       }
       pause(STEP_PAUSE);
 
