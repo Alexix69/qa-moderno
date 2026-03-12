@@ -13,7 +13,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class SeleniumLocatorDemo {
 
   // Visual pause between demo sections (ms).
-  private static final int STEP_PAUSE = 10000;
+  private static final int STEP_PAUSE = 9000;
 
   // Overlay panel element ID injected into each page.
   private static final String OVERLAY_ID = "__selenium_demo_overlay__";
@@ -34,9 +34,9 @@ public class SeleniumLocatorDemo {
 
       String d1Title = "[DEMO 1] WebElement — By.id()";
       String d1Body  = "driver.findElement(By.id(\"username\"))\n\n"
-                     + "WebElement = Selenium's live handle to a DOM node.\n"
-                     + "findElement → returns ONE element\n"
-                     + "             or throws NoSuchElementException.";
+                     + "WebElement = referencia de Selenium a un nodo del DOM.\n"
+                     + "findElement → retorna UN solo elemento\n"
+                     + "             o lanza NoSuchElementException.";
       banner(d1Title);
       System.out.println("  driver.findElement(By.id(\"username\"))");
       System.out.println("  A WebElement is Selenium's live handle to a DOM node.");
@@ -75,7 +75,7 @@ public class SeleniumLocatorDemo {
       for (int i = 0; i < locators.length; i++) {
         System.out.println("    → " + locatorLabels[i]);
         updateOverlay(driver, d2Title,
-            "Locating the same element four ways:\n\n  → " + locatorLabels[i]);
+            "Localizando el mismo elemento de cuatro formas:\n\n  → " + locatorLabels[i]);
         WebElement el = driver.findElement(locators[i]);
         highlightElement(driver, el);
         pause(800);
@@ -95,10 +95,10 @@ public class SeleniumLocatorDemo {
       // Show the FRAGILE locator — an absolute XPath that currently works
       // but breaks if any surrounding element is added, removed, or reordered.
       String fragileXPath = "/html/body/div[2]/div/div/form/div/input";
-      String fragileMsg = "DEMO 3 — FRAGILE SELECTOR\n\n"
+      String fragileMsg = "DEMO 3 — SELECTOR FRÁGIL\n\n"
                         + "XPath: /html/body/div[2]/div/div/form/div/input\n\n"
-                        + "Absolute XPath depends on DOM structure.\n"
-                        + "Small layout changes can break this locator.";
+                        + "El XPath absoluto depende de la estructura del DOM.\n"
+                        + "Cambios pequeños en el layout pueden romper este localizador.";
       System.out.println("  [FRAGILE]  By.xpath(\"" + fragileXPath + "\")");
       System.out.println("             Absolute path — depends entirely on DOM structure.");
       System.out.println("             Any layout change will silently break this locator.");
@@ -112,10 +112,10 @@ public class SeleniumLocatorDemo {
       pause(STEP_PAUSE);
 
       // Now locate the same element with a robust, semantic locator.
-      String robustMsg = "ROBUST SELECTOR\n\n"
+      String robustMsg = "SELECTOR ROBUSTO\n\n"
                        + "By.id(\"username\")\n\n"
-                       + "Using a stable attribute (id) makes the locator\n"
-                       + "readable, reliable, and maintainable.";
+                       + "Usar un atributo estable (id) hace al localizador\n"
+                       + "legible, confiable y fácil de mantener.";
       System.out.println("  [ROBUST]   By.id(\"username\") — semantic, stable, independent of DOM structure.");
       updateOverlay(driver, d3Title, robustMsg);
       WebElement robust = driver.findElement(By.id("username"));
@@ -136,23 +136,23 @@ public class SeleniumLocatorDemo {
       System.out.println("  Returns List<WebElement> — empty list if none found (never throws).");
       updateOverlay(driver, d4Title,
           "driver.findElements(By.tagName(\"input\"))\n\n"
-        + "Returns List<WebElement>.\n"
-        + "Empty list if none found (never throws).\n\n"
-        + "Counting and highlighting ALL inputs...");
+        + "Retorna List<WebElement>.\n"
+        + "Lista vacía si no hay coincidencias (nunca lanza excepción).\n\n"
+        + "Contando y resaltando TODOS los inputs...");
 
       List<WebElement> inputs = driver.findElements(By.tagName("input"));
       System.out.println("  Inputs found on this page: " + inputs.size());
       updateOverlay(driver, d4Title,
           "findElements(By.tagName(\"input\"))\n\n"
-        + "Found: " + inputs.size() + " input elements\n\n"
-        + "Highlighting ALL matches simultaneously...");
+        + "Encontrados: " + inputs.size() + " elementos input\n\n"
+        + "Resaltando TODAS las coincidencias simultáneamente...");
 
       // Highlight every matched element at once via a single JS call.
       highlightAll(driver, inputs);
       pause(STEP_PAUSE);
 
       banner("Demo complete — browser closing.");
-      updateOverlay(driver, "Demo complete", "Thank you!\n\nBrowser closing...");
+      updateOverlay(driver, "Demo completado", "¡Gracias!\n\nCerrando el navegador...");
       pause(1500);
 
     } finally {
@@ -169,6 +169,17 @@ public class SeleniumLocatorDemo {
   private static void createOverlay(WebDriver driver) {
     JavascriptExecutor js = (JavascriptExecutor) driver;
     js.executeScript(
+        // Inject pulse keyframe animation (once per page load).
+        "if (!document.getElementById('__selenium_demo_style__')) {" +
+        "  var st = document.createElement('style');" +
+        "  st.id = '__selenium_demo_style__';" +
+        "  st.textContent = '@keyframes seleniumPulse {" +
+        "    0%   { box-shadow: 0 0 5px 2px #ff0000; }" +
+        "    50%  { box-shadow: 0 0 22px 8px #ff0000; }" +
+        "    100% { box-shadow: 0 0 5px 2px #ff0000; }" +
+        "  }';" +
+        "  document.head.appendChild(st);" +
+        "}" +
         "var existing = document.getElementById('" + OVERLAY_ID + "');" +
         "if (existing) existing.remove();" +
         "var panel = document.createElement('div');" +
@@ -213,51 +224,30 @@ public class SeleniumLocatorDemo {
   // ── Highlight helpers ─────────────────────────────────────────────────────
 
   /**
-   * Blinks a single element — 5 cycles × 400 ms ≈ 2 s.
-   * Leaves the red outline visible after animation.
+   * Applies a persistent CSS pulse animation to an element.
+   * The red glow remains active for the entire duration of the demo step.
    */
   private static void highlightElement(WebDriver driver, WebElement element) {
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    String on  = "arguments[0].style.outline='3px solid #ff0000';" +
-                 "arguments[0].style.boxShadow='0 0 10px 2px #ff0000';";
-    String off = "arguments[0].style.outline='';" +
-                 "arguments[0].style.boxShadow='';";
-    for (int i = 0; i < 5; i++) {
-      js.executeScript(i % 2 == 0 ? on : off, element);
-      pause(400);
-    }
-    js.executeScript(on, element); // leave border on
+    js.executeScript(
+        "arguments[0].style.outline = '3px solid #ff0000';" +
+        "arguments[0].style.animation = 'seleniumPulse 1s ease-in-out infinite';",
+        element);
   }
 
   /**
-   * Highlights ALL elements in the list simultaneously using a single JS call,
-   * then blinks them in sync to demonstrate that findElements returned many nodes.
+   * Applies a persistent CSS pulse animation to ALL matched elements simultaneously.
+   * Every element keeps its red glow for the entire duration of the demo step.
    */
   private static void highlightAll(WebDriver driver, List<WebElement> elements) {
     if (elements.isEmpty()) return;
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    Object[] args = elements.toArray();
-
-    String applyStyle = buildBulkStyleScript("3px solid #ff0000", "0 0 10px 2px #ff0000");
-    String clearStyle = buildBulkStyleScript("", "");
-
-    for (int i = 0; i < 5; i++) {
-      js.executeScript(i % 2 == 0 ? applyStyle : clearStyle, args);
-      pause(400);
-    }
-    js.executeScript(applyStyle, args); // leave borders on
-  }
-
-  /**
-   * Builds a JS snippet that applies outline + boxShadow to all arguments[0..n].
-   */
-  private static String buildBulkStyleScript(String outline, String shadow) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("for(var i=0;i<arguments.length;i++){");
-    sb.append("  arguments[i].style.outline='").append(outline).append("';");
-    sb.append("  arguments[i].style.boxShadow='").append(shadow).append("';");
-    sb.append("}");
-    return sb.toString();
+    js.executeScript(
+        "for (var i = 0; i < arguments.length; i++) {" +
+        "  arguments[i].style.outline = '3px solid #ff0000';" +
+        "  arguments[i].style.animation = 'seleniumPulse 1s ease-in-out infinite';" +
+        "}",
+        elements.toArray());
   }
 
   // ── Console helpers ───────────────────────────────────────────────────────
@@ -270,8 +260,8 @@ public class SeleniumLocatorDemo {
   private static void transition(WebDriver driver, String nextTitle) {
     try {
       updateOverlay(driver,
-          "NEXT DEMONSTRATION",
-          "Coming up:\n" + nextTitle);
+          "SIGUIENTE DEMOSTRACIÓN",
+          "A continuación:\n" + nextTitle);
     } catch (Exception ignored) {
       // Overlay may not exist on the very first call — that is fine.
     }
