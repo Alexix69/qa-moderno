@@ -1,6 +1,6 @@
 ### HU-001A: Procesar pedido de cocina (Descomposición y Asignación)
 
-#### Caso de prueba: Registro exitoso de una orden con datos válidos
+#### <a id="tc-01"></a>TC-01: Registro exitoso de una orden con datos válidos
 
 ```
 Caso de prueba: Registro exitoso de una orden con datos válidos
@@ -12,7 +12,7 @@ Caso de prueba: Registro exitoso de una orden con datos válidos
   Y cada tarea queda registrada en estado PENDING
 ```
 
-#### Caso de prueba: Intento de registrar una orden sin productos
+#### <a id="tc-02"></a>TC-02: Intento de registrar una orden sin productos
 
 ```
 Caso de prueba: Intento de registrar una orden sin productos
@@ -23,7 +23,7 @@ Caso de prueba: Intento de registrar una orden sin productos
   Y se genera una notificación de error indicando que se requiere al menos un producto
 ```
 
-#### Caso de prueba: Registro de orden con número de mesa inválido
+#### <a id="tc-03"></a>TC-03: Registro de orden con número de mesa inválido
 
 ```
 Caso de prueba: Registro de orden con número de mesa inválido
@@ -34,7 +34,7 @@ Caso de prueba: Registro de orden con número de mesa inválido
   Y se genera una notificación de error indicando que el número de mesa es inválido
 ```
 
-#### Caso de prueba: Registro de orden con longitud máxima permitida en campos
+#### <a id="tc-04"></a>TC-04: Registro de orden con longitud máxima permitida en campos
 
 ```
 Caso de prueba: Registro de orden con longitud máxima permitida en campos
@@ -43,7 +43,7 @@ Caso de prueba: Registro de orden con longitud máxima permitida en campos
   Entonces el sistema acepta la orden y la registra correctamente
 ```
 
-#### Caso de prueba: Registro de orden con datos que exceden los límites permitidos
+#### <a id="tc-05"></a>TC-05: Registro de orden con datos que exceden los límites permitidos
 
 ```
 Caso de prueba: Registro de orden con datos que exceden los límites permitidos
@@ -57,7 +57,7 @@ Caso de prueba: Registro de orden con datos que exceden los límites permitidos
 
 ### HU-001B: Validaciones de Pedido
 
-#### Caso de prueba: Detección de atributos mínimos faltantes en la solicitud
+#### <a id="tc-06"></a>TC-06: Detección de atributos mínimos faltantes en la solicitud
 
 ```
 Caso de prueba: Detección de atributos mínimos faltantes en la solicitud
@@ -72,7 +72,7 @@ Caso de prueba: Detección de atributos mínimos faltantes en la solicitud
 
 ### HU-002: Consultar tareas pendientes por estación
 
-#### Caso de prueba: Consulta exitosa de tareas pendientes por estación
+#### <a id="tc-07"></a>TC-07: Consulta exitosa de tareas pendientes por estación
 
 ```
 Caso de prueba: Consulta exitosa de tareas pendientes por estación
@@ -82,7 +82,7 @@ Caso de prueba: Consulta exitosa de tareas pendientes por estación
   Entonces el sistema retorna la lista de tareas en estado PENDING para esa estación
 ```
 
-#### Caso de prueba: Consulta de tareas pendientes cuando no existen tareas
+#### <a id="tc-08"></a>TC-08: Consulta de tareas pendientes cuando no existen tareas
 
 ```
 Caso de prueba: Consulta de tareas pendientes cuando no existen tareas
@@ -96,7 +96,7 @@ Caso de prueba: Consulta de tareas pendientes cuando no existen tareas
 
 ### HU-004: Consultar historial de tareas completadas por estación
 
-#### Caso de prueba: Consulta de historial de tareas completadas por estación
+#### <a id="tc-09"></a>TC-09: Consulta de historial de tareas completadas por estación
 
 ```
 Caso de prueba: Consulta de historial de tareas completadas por estación
@@ -106,7 +106,7 @@ Caso de prueba: Consulta de historial de tareas completadas por estación
   Entonces el sistema retorna la lista de tareas en estado COMPLETED dentro del periodo de retención
 ```
 
-#### Caso de prueba: Consulta de historial fuera del periodo de retención
+#### <a id="tc-10"></a>TC-10: Consulta de historial fuera del periodo de retención
 
 ```
 Caso de prueba: Consulta de historial fuera del periodo de retención
@@ -120,7 +120,7 @@ Caso de prueba: Consulta de historial fuera del periodo de retención
 
 ### HU-003: Iniciar y completar tareas de preparación
 
-#### Caso de prueba: Inicio exitoso de tarea en estado PENDING
+#### <a id="tc-11"></a>TC-11: Inicio exitoso de tarea en estado PENDING
 
 ```
 Caso de prueba: Inicio exitoso de tarea en estado PENDING
@@ -129,7 +129,7 @@ Caso de prueba: Inicio exitoso de tarea en estado PENDING
   Entonces la tarea cambia a estado IN_PREPARATION
 ```
 
-#### Caso de prueba: Intento de iniciar tarea que no está en estado PENDING
+#### <a id="tc-12"></a>TC-12: Intento de iniciar tarea que no está en estado PENDING
 
 ```
 Caso de prueba: Intento de iniciar tarea que no está en estado PENDING
@@ -139,7 +139,7 @@ Caso de prueba: Intento de iniciar tarea que no está en estado PENDING
   Y se genera una notificación de error indicando transición de estado inválida
 ```
 
-#### Caso de prueba: Completado exitoso de tarea en estado IN_PREPARATION
+#### <a id="tc-13"></a>TC-13: Completado exitoso de tarea en estado IN_PREPARATION
 
 ```
 Caso de prueba: Completado exitoso de tarea en estado IN_PREPARATION
@@ -148,7 +148,7 @@ Caso de prueba: Completado exitoso de tarea en estado IN_PREPARATION
   Entonces la tarea cambia a estado COMPLETED
 ```
 
-#### Caso de prueba: Intento de completar tarea que no está en estado IN_PREPARATION
+#### <a id="tc-14"></a>TC-14: Intento de completar tarea que no está en estado IN_PREPARATION
 
 ```
 Caso de prueba: Intento de completar tarea que no está en estado IN_PREPARATION
@@ -158,7 +158,7 @@ Caso de prueba: Intento de completar tarea que no está en estado IN_PREPARATION
   Y se genera una notificación de error indicando transición de estado inválida
 ```
 
-#### Caso de prueba: Fallo durante el proceso asíncrono de preparación
+#### <a id="tc-15"></a>TC-15: Fallo durante el proceso asíncrono de preparación
 
 ```
 Caso de prueba: Fallo durante el proceso asíncrono de preparación
@@ -173,7 +173,7 @@ Caso de prueba: Fallo durante el proceso asíncrono de preparación
 
 ### HU-005: Estado agregado del pedido según tareas
 
-#### Caso de prueba: El pedido pasa a COMPLETED cuando todas las tareas están completadas
+#### <a id="tc-16"></a>TC-16: El pedido pasa a COMPLETED cuando todas las tareas están completadas
 
 ```
 Caso de prueba: El pedido pasa a COMPLETED cuando todas las tareas están completadas
@@ -183,7 +183,7 @@ Caso de prueba: El pedido pasa a COMPLETED cuando todas las tareas están comple
   Entonces la orden cambia a estado COMPLETED
 ```
 
-#### Caso de prueba: El pedido permanece IN_PROGRESS si al menos una tarea no está completada
+#### <a id="tc-17"></a>TC-17: El pedido permanece IN_PROGRESS si al menos una tarea no está completada
 
 ```
 Caso de prueba: El pedido permanece IN_PROGRESS si al menos una tarea no está completada
@@ -197,7 +197,7 @@ Caso de prueba: El pedido permanece IN_PROGRESS si al menos una tarea no está c
 
 ### HU-006: Procesar facturación de pedido completado
 
-#### Caso de prueba: Facturación exitosa de pedido completado
+#### <a id="tc-18"></a>TC-18: Facturación exitosa de pedido completado
 
 ```
 Caso de prueba: Facturación exitosa de pedido completado
@@ -208,7 +208,7 @@ Caso de prueba: Facturación exitosa de pedido completado
   Y la orden cambia a estado INVOICED
 ```
 
-#### Caso de prueba: Intento de facturación de pedido no completado
+#### <a id="tc-19"></a>TC-19: Intento de facturación de pedido no completado
 
 ```
 Caso de prueba: Intento de facturación de pedido no completado
@@ -218,7 +218,7 @@ Caso de prueba: Intento de facturación de pedido no completado
   Y se genera una notificación de error indicando que la orden no puede ser facturada
 ```
 
-#### Caso de prueba: Intento de facturación de pedido ya facturado
+#### <a id="tc-20"></a>TC-20: Intento de facturación de pedido ya facturado
 
 ```
 Caso de prueba: Intento de facturación de pedido ya facturado
@@ -232,7 +232,7 @@ Caso de prueba: Intento de facturación de pedido ya facturado
 
 ### HU-007: Notificaciones de errores y validaciones
 
-#### Caso de prueba: Notificación de error en transición de estado inválida
+#### <a id="tc-21"></a>TC-21: Notificación de error en transición de estado inválida
 
 ```
 Caso de prueba: Notificación de error en transición de estado inválida
@@ -242,7 +242,7 @@ Caso de prueba: Notificación de error en transición de estado inválida
   Y retorna una notificación de error con el formato y canal establecidos
 ```
 
-#### Caso de prueba: Notificación de error por duplicidad de usuario
+#### <a id="tc-22"></a>TC-22: Notificación de error por duplicidad de usuario
 
 ```
 Caso de prueba: Notificación de error por duplicidad de usuario
@@ -255,21 +255,21 @@ Caso de prueba: Notificación de error por duplicidad de usuario
 
 ## Análisis de Casos de Prueba vs Implementación Real
 
-| ID | Caso de Prueba generado por la instrucción | Ajuste del realizado por el probador | ¿Por qué se ajustó? |
+| ID | Caso de Prueba generado por la instrucción | Ajuste del probador | Razón del ajuste |
 |---|---|---|---|
-| TC-01 | Registro exitoso de una orden con datos válidos | Registro exitoso de una orden con datos válidos **y verificar estado inicial CREATED** | La instrucción omitió que la orden inicia en estado `CREATED` (no `PENDING`). El código en Order.java demuestra que toda orden nueva tiene `OrderStatus.CREATED`. |
-| TC-02 | Registro de orden con número de mesa inválido (que no existe en el sistema) | Registro de orden con número de mesa **null o vacío** | El código NO valida existencia de mesas; solo valida que `tableNumber` no sea null ni vacío (Order.java línea 42). No existe catálogo de mesas. |
-| TC-03 | Registro de orden con longitud máxima permitida en campos |  | No aplica |
-| TC-04 | Registro de orden con datos que exceden los límites permitidos |  | Similar a TC-03 |
-| TC-05 | Consulta exitosa de tareas pendientes por estación (solo PENDING) | Consulta exitosa de tareas por estación **con filtro opcional de status** | El endpoint `GET /api/tasks/station/{station}?status=` acepta cualquier `TaskStatus` como parámetro opcional, no solo PENDING. |
-| TC-06 | Consulta de historial de tareas completadas por estación con periodo de retención | **Eliminar o replantear caso de prueba** | NO existe endpoint específico de historial ni funcionalidad de periodo de retención. El endpoint existente permite filtrar por status=COMPLETED pero sin límite temporal. |
-| TC-07 | Consulta de historial fuera del periodo de retención | **Eliminar caso de prueba** | No existe implementación de periodo de retención en el código. |
-| TC-08 | Inicio exitoso de tarea en estado PENDING | Inicio exitoso de tarea en estado PENDING **verificando que se asigne `startedAt` y la orden pase a IN_PROGRESS** | La instrucción omitió que `Task.start()` asigna timestamp `startedAt` y que `StartTaskPreparationUseCase` actualiza la orden a `IN_PROGRESS`. |
-| TC-09 | Completado exitoso de tarea en estado IN_PREPARATION (usuario marca como completada) | Completado **automático** de tarea tras ejecución de comando async | El completado NO es manual. `ReactorAsyncCommandDispatcher` completa automáticamente la tarea tras ejecutar el comando. No existe endpoint para completar manualmente. |
-| TC-10 | Intento de completar tarea que no está en IN_PREPARATION | **Eliminar o replantear como test unitario de dominio** | No existe endpoint REST para completar tareas manualmente; el completado es interno/automático. Solo aplica como validación de dominio en `Task.complete()`. |
-| TC-11 | Fallo durante el proceso asíncrono de preparación | Fallo durante el proceso asíncrono de preparación **sin reintentos ni actualización de estado** | La instrucción no especificó que es fire-and-forget sin política de reintentos. El error solo se loguea a stderr sin persistir ni notificar. |
-| TC-12 | El pedido pasa a COMPLETED cuando todas las tareas están completadas | | No aplica |
-| TC-13 | Intento de facturación de pedido ya facturado (rechaza la solicitud o ignora) | Intento de facturación de pedido ya facturado **retorna silenciosamente sin error** | No genera notificación de error, simplemente no hace nada. |
-| TC-14 | Intento de facturación de pedido no completado (orden no está en COMPLETED) | Intento de facturación de pedido **en estado distinto a COMPLETED** con verificación de estados CREATED o IN_PROGRESS | Especificar que aplica a estados `CREATED`, `IN_PROGRESS` y `INVOICED`. |
-| TC-15 | Notificación de error en transición de estado inválida | Notificación de error en transición de estado inválida **con código HTTP 400 y formato ErrorResponse** | La instrucción no especificó el formato de respuesta (`ErrorResponse` con message, details, status) ni el código HTTP 400 definido en `GlobalExceptionHandler`. |
-| TC-16 | Notificación de error por duplicidad de usuario | Notificación de error por duplicidad de usuario **con código HTTP 409 CONFLICT** | La instrucción omitió el código HTTP específico. El código usa HTTP 409 (CONFLICT) |
+| [TC-01](#tc-01) | Registro exitoso de una orden con datos válidos | Mismo caso, con la verificación adicional de que la orden arranca en estado **CREATED** | La IA no contempló que toda orden nueva comienza en `CREATED`. Al revisar el código se ve claramente que ese es el estado de partida, no `PENDING`. |
+| [TC-03](#tc-03) | Registro de orden con número de mesa inválido (que no existe en el sistema) | Registro de orden con número de mesa **nulo o vacío** | El sistema no tiene un catálogo de mesas; solo revisa que el campo llegue con algún valor. Nunca valida si esa mesa existe o no. |
+| [TC-04](#tc-04) | Registro de orden con longitud máxima permitida en campos |  | No aplica |
+| [TC-05](#tc-05) | Registro de orden con datos que exceden los límites permitidos |  | Similar al anterior, no aplica |
+| [TC-07](#tc-07) | Consulta exitosa de tareas pendientes por estación (solo PENDING) | Consulta exitosa de tareas por estación **con filtro opcional de estado** (no solo PENDING) | El endpoint admite cualquier estado de tarea como parámetro opcional, no únicamente PENDING. La IA asumió un filtro fijo que no existe así en el código. |
+| [TC-09](#tc-09) | Consulta de historial de tareas completadas por estación con periodo de retención | **Eliminar o replantear** — no existe historial ni periodo de retención | En el código no hay endpoint de historial ni restricción temporal. Se puede filtrar por estado COMPLETED, pero sin límite de fechas. |
+| [TC-10](#tc-10) | Consulta de historial fuera del periodo de retención | **Eliminar este caso** | El concepto de periodo de retención no está implementado en ninguna parte del código. |
+| [TC-11](#tc-11) | Inicio exitoso de tarea en estado PENDING | Al iniciar la tarea, también se verifica que **se guarde la fecha de inicio (`startedAt`) y que la orden pase a IN_PROGRESS** | La instrucción no mencionó esos efectos colaterales que sí ocurren en el código: se registra el timestamp y se actualiza el estado de la orden. |
+| [TC-13](#tc-13) | Completado exitoso de tarea en estado IN_PREPARATION (usuario marca como completada) | El completado **lo ejecuta el sistema automáticamente** tras el comando asíncrono; el usuario no interviene | No existe un endpoint para completar tareas a mano. El dispatcher asíncrono lo hace por sí solo una vez que termina el comando. |
+| [TC-14](#tc-14) | Intento de completar tarea que no está en estado IN_PREPARATION | **Eliminar o convertir en test unitario** de lógica de dominio | Al no existir endpoint REST para completar tareas manualmente, este escenario solo tiene sentido verificarlo en una prueba unitaria de dominio. |
+| [TC-15](#tc-15) | Fallo durante el proceso asíncrono de preparación | Fallo durante el proceso asíncrono **sin reintentos y sin cambio de estado** | El proceso es fire-and-forget: ante cualquier error solo se deja traza en el log, sin persistir el fallo ni notificar a nadie. |
+| [TC-16](#tc-16) | El pedido pasa a COMPLETED cuando todas las tareas están completadas | | No aplica |
+| [TC-20](#tc-20) | Intento de facturación de pedido ya facturado (rechaza la solicitud o ignora) | Cuando la orden ya está facturada, **el sistema simplemente no hace nada** — no lanza error ni devuelve advertencia | El código ignora la solicitud en silencio, muy distinto a lo que la IA propuso (rechazar con error). |
+| [TC-19](#tc-19) | Intento de facturación de pedido no completado (orden no está en COMPLETED) | Intento de facturación **con la orden en estado CREATED, IN_PROGRESS o INVOICED** | Hay que ser precisos con qué estados activan el rechazo; decir solo "no completado" es demasiado vago para el test. |
+| [TC-21](#tc-21) | Notificación de error en transición de estado inválida | Se añade la verificación del **formato exacto de la respuesta de error (`ErrorResponse`) y el código HTTP 400** | La instrucción no especificó cómo luce el cuerpo del error ni que el código de estado debería ser 400, ambos definidos en el manejador global de excepciones. |
+| [TC-22](#tc-22) | Notificación de error por duplicidad de usuario | Se aclara que la respuesta debe devolver **HTTP 409 CONFLICT** | La instrucción dejó abierto el código de estado. El código usa específicamente HTTP 409 para este escenario. |

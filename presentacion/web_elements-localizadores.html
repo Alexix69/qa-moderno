@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selenium: Selectores, XPath, Elementos Dinámicos & IA — Sofka</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@300,400,500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== SOFKA BRAND TOKENS ===== */
+    :root {
+      --sofka-orange: #FF7E08;
+      --sofka-light: #1a1a1a;
+      --sofka-dark: #B8A894;
+      --sofka-wht: #FFFFFF;
+      --sofka-blk: #000000;
+      --sofka-green: #42D36F;
+      --sofka-teal: #06C8C8;
+      --sofka-violet: #9747FF;
+      --sofka-pink: #FE9CAB;
+
+      --bg-slide: #000000;
+      --bg-card: rgba(255,255,255,0.05);
+      --bg-card-hover: rgba(255,255,255,0.08);
+      --bg-code: #111111;
+      --text-primary: #e8e8e8;
+      --text-secondary: #b0a89e;
+      --text-muted: #7a7268;
+      --border-light: rgba(255,255,255,0.1);
+    }
+
+    /* ===== GLOBAL BLACK BG ===== */
+    html, body {
+      background: #000 !important;
+    }
+    .reveal-viewport {
+      background: #000 !important;
+    }
+
+    /* ===== BASE ===== */
+    .reveal {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text-primary);
+      background: #000 !important;
+    }
+
+    .reveal .slides > section {
+      background: #000 !important;
+      box-sizing: border-box;
+    }
+
+    .reveal .slide-background {
+      background-color: #000 !important;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Clash Grotesk', 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: -0.025em;
+      color: var(--sofka-wht);
+    }
+
+    .reveal h1 { font-size: 2.2em; font-weight: 700; }
+    .reveal h2 { font-size: 1.4em; color: var(--sofka-wht); margin-bottom: 6px; }
+    .reveal h3 { font-size: 0.95em; color: var(--sofka-orange); font-weight: 600; }
+
+    .reveal code, .reveal pre code {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.50em;
+    }
+
+    .reveal pre {
+      background: var(--bg-code);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      width: 100%;
+      margin: 0.3em auto;
+    }
+
+    .reveal pre code {
+      padding: 12px 16px;
+      max-height: 380px;
+      overflow-y: auto;
+      line-height: 1.45;
+      background: var(--bg-code);
+      color: #d4d4d4;
+      border-radius: 10px;
+    }
+
+    .reveal section {
+      text-align: left;
+    }
+
+    /* ===== SOFKA LOGO MARK ===== */
+    .sofka-logo {
+      position: fixed;
+      bottom: 20px;
+      left: 28px;
+      z-index: 100;
+      font-family: 'Clash Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--sofka-wht);
+      letter-spacing: -0.02em;
+      opacity: 0.7;
+    }
+    .sofka-logo span {
+      color: var(--sofka-orange);
+    }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.52em;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--sofka-orange);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    /* ===== ORANGE ACCENT BAR ===== */
+    .accent-bar {
+      width: 48px;
+      height: 4px;
+      background: var(--sofka-orange);
+      border-radius: 2px;
+      margin: 10px 0 18px 0;
+    }
+
+    /* ===== CARDS ===== */
+    .card-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 14px 16px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--sofka-orange);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255,126,8,0.12);
+    }
+    .card h4 {
+      margin: 0 0 4px 0;
+      font-family: 'Clash Grotesk', sans-serif;
+      font-size: 0.78em;
+      font-weight: 600;
+      color: var(--sofka-orange);
+    }
+    .card p, .card li {
+      font-size: 0.52em;
+      line-height: 1.55;
+      margin: 0;
+      color: var(--text-secondary);
+    }
+    .card ul { padding-left: 14px; margin: 4px 0 0 0; }
+    .card code {
+      background: rgba(255,126,8,0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+      color: var(--sofka-orange);
+    }
+    .card pre {
+      margin: 4px 0 !important;
+    }
+    .card pre code {
+      padding: 10px 14px;
+      max-height: 260px;
+    }
+
+    /* ===== BADGES ===== */
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.52em;
+      font-weight: 600;
+      margin: 3px;
+    }
+    .badge-green { background: rgba(66,211,111,0.15); color: #42D36F; border: 1px solid rgba(66,211,111,0.35); }
+    .badge-purple { background: rgba(151,71,255,0.15); color: #b580ff; border: 1px solid rgba(151,71,255,0.35); }
+    .badge-red { background: rgba(255,126,8,0.15); color: #FF7E08; border: 1px solid rgba(255,126,8,0.35); }
+    .badge-yellow { background: rgba(184,168,148,0.15); color: #B8A894; border: 1px solid rgba(184,168,148,0.35); }
+
+    /* ===== TABLES ===== */
+    .reveal table {
+      font-size: 0.46em;
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 8px 0;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .reveal table thead th {
+      background: rgba(255,126,8,0.15);
+      color: var(--sofka-orange);
+      padding: 9px 12px;
+      font-family: 'Clash Grotesk', sans-serif;
+      font-weight: 600;
+      border: none;
+      text-align: left;
+    }
+    .reveal table tbody td {
+      padding: 7px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.02);
+      vertical-align: top;
+    }
+    .reveal table tbody tr:nth-child(even) td {
+      background: rgba(255,255,255,0.04);
+    }
+    .reveal table tbody tr:hover td {
+      background: rgba(255,126,8,0.06);
+    }
+
+    /* ===== TITLE SLIDE ===== */
+    .title-slide {
+      text-align: left !important;
+      padding-left: 40px !important;
+    }
+    .title-slide h1 {
+      font-size: 2.4em;
+      font-weight: 700;
+      color: var(--sofka-wht);
+      margin-bottom: 0.15em;
+      line-height: 1.1;
+    }
+    .title-slide h1 .orange { color: var(--sofka-orange); }
+    .title-slide .subtitle {
+      font-size: 0.95em;
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin-top: 8px;
+    }
+    .title-slide .tags {
+      margin-top: 28px;
+    }
+    .title-slide .brand-line {
+      font-family: 'Clash Grotesk', sans-serif;
+      font-size: 0.6em;
+      color: var(--text-muted);
+      margin-top: 36px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== VS CONTAINER ===== */
+    .vs-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 14px;
+      align-items: start;
+      margin-top: 14px;
+    }
+    .vs-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Clash Grotesk', sans-serif;
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--sofka-orange);
+      padding-top: 40px;
+    }
+
+    /* ===== DOM TREE ===== */
+    .dom-tree {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58em;
+      background: var(--bg-code);
+      padding: 16px 22px;
+      border-radius: 10px;
+      line-height: 1.7;
+      color: #d4d4d4;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .dom-tree .node {
+      color: var(--sofka-orange);
+      font-weight: 600;
+    }
+    .dom-tree .attr {
+      color: var(--sofka-teal);
+    }
+    .dom-tree .connector {
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ===== PYRAMID ===== */
+    .pyramid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin: 16px 0;
+    }
+    .pyramid-level {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.58em;
+      font-weight: 600;
+      text-align: center;
+      transition: transform 0.3s;
+      border: 1px solid transparent;
+    }
+    .pyramid-level:hover { transform: scale(1.04); }
+    .pyr-1 { width: 280px; background: var(--sofka-orange); color: var(--sofka-wht); }
+    .pyr-2 { width: 360px; background: rgba(255,126,8,0.15); border-color: rgba(255,126,8,0.3); color: var(--sofka-orange); }
+    .pyr-3 { width: 460px; background: rgba(255,255,255,0.05); border-color: var(--border-light); color: var(--text-secondary); }
+    .pyr-4 { width: 560px; background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); color: var(--text-secondary); }
+
+    .arrow-down {
+      font-size: 0.8em;
+      color: var(--sofka-dark);
+    }
+
+    /* ===== FLOW ===== */
+    .flow-diagram {
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-top: 10px;
+    }
+    .flow-image-slide {
+      background: #000 !important;
+    }
+
+    /* ===== CHECKLIST ===== */
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+    .checklist li {
+      font-size: 0.52em;
+      padding: 7px 12px;
+      margin: 4px 0;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border-left: 4px solid var(--sofka-orange);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-primary);
+      transition: all 0.3s;
+    }
+    .checklist li:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateX(4px);
+    }
+    .checklist .check-icon { font-size: 1.1em; }
+
+    /* ===== PROMPT BOX ===== */
+    .prompt-box {
+      background: var(--bg-code);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.42em;
+      line-height: 1.6;
+      color: #d4d4d4;
+      white-space: pre-wrap;
+      margin: 6px 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    /* ===== MISC ===== */
+    .highlight-text { color: var(--sofka-orange); font-weight: 600; }
+    .small-text { font-size: 0.52em; color: var(--text-muted); }
+
+    /* Slide number */
+    .reveal .slide-number {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65em;
+      background: rgba(255,126,8,0.2);
+      color: var(--sofka-orange);
+      border-radius: 6px;
+      padding: 4px 10px;
+      right: 16px;
+      bottom: 16px;
+    }
+
+    /* ===== PROGRESS & CONTROLS ===== */
+    .reveal .progress { color: var(--sofka-orange); height: 3px; }
+    .reveal .controls { color: var(--sofka-orange); }
+
+    /* Fragment animations */
+    .reveal .fragment.grow-in {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .reveal .fragment.grow-in.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Two-col layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    /* Compact slides (uniform sizing + overflow control) */
+    .compact-slide .accent-bar { margin: 8px 0 14px; }
+    .compact-slide h3 { font-size: 0.88em; }
+    .compact-slide .two-col { gap: 12px; }
+    .compact-slide .card-grid { gap: 8px; margin-top: 8px; }
+    .compact-slide .card { padding: 10px 12px; }
+    .compact-slide .card h4 { font-size: 0.7em; }
+    .compact-slide .card p,
+    .compact-slide .card li { font-size: 0.48em; }
+    .compact-slide pre code { font-size: 0.48em; max-height: 320px; }
+    .compact-slide table { font-size: 0.44em; }
+    .compact-slide .prompt-box { font-size: 0.38em; max-height: 230px; padding: 10px 12px; }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pipeline-grid { gap: 6px; }
+    .pipeline-grid .card p { font-size: 0.46em; margin: 0; }
+    .pipeline-grid .card p.step { font-size: 1.1em; }
+
+    .center-slide {
+      text-align: center;
+    }
+    .center-slide .accent-bar {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .center-slide .pyramid {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .center-slide .card {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .full-slide .vs-container { gap: 18px; }
+    .full-slide .vs-divider { font-size: 1.3em; padding-top: 52px; }
+    .full-slide .card { padding: 16px 18px; }
+    .full-slide .card h4 { font-size: 0.84em; }
+    .full-slide .card p,
+    .full-slide .card li { font-size: 0.6em; }
+    .full-slide pre code { font-size: 0.56em; max-height: 420px; }
+
+    /* Inline code */
+    .reveal p code, .reveal li code, .reveal td code {
+      background: rgba(255,126,8,0.15);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: var(--sofka-orange);
+    }
+
+    /* Mermaid */
+    .mermaid { margin: 10px auto; }
+    .mermaid svg { max-height: 320px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    ::-webkit-scrollbar-thumb { background: var(--sofka-orange); border-radius: 3px; opacity: 0.5; }
+
+    /* ===== TOP ORANGE LINE per slide ===== */
+    .reveal .slides > section::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--sofka-orange);
+    }
+
+    /* ===== DARK SLIDES (now all slides are dark, keep for explicit class) ===== */
+    .slide-dark {
+      background: #000 !important;
+      color: var(--sofka-wht) !important;
+    }
+    .slide-dark h1, .slide-dark h2 { color: var(--sofka-wht) !important; }
+    .slide-dark h3 { color: var(--sofka-orange) !important; }
+    .slide-dark .section-label { color: var(--sofka-orange) !important; }
+    .slide-dark .card {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+    }
+    .slide-dark .card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: var(--sofka-orange);
+    }
+    .slide-dark .card p, .slide-dark .card li { color: rgba(255,255,255,0.75); }
+    .slide-dark .checklist li { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.9); }
+    .slide-dark .checklist li:hover { background: rgba(255,255,255,0.08); }
+    .slide-dark::before { background: var(--sofka-orange) !important; }
+    .slide-dark table tbody td { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.08); }
+    .slide-dark table tbody tr:nth-child(even) td { background: rgba(255,255,255,0.06); }
+  </style>
+</head>
+<body>
+  <!-- Sofka logo watermark -->
+  <div class="sofka-logo">sofka<span>.</span></div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ======================= SLIDE 1: PORTADA ======================= -->
+      <section class="title-slide slide-dark" data-transition="zoom">
+        <div class="section-label">Taller de automatización</div>
+        <h1>Selenium: selectores,<br><span class="orange">XPath</span> & elementos dinámicos</h1>
+        <div class="accent-bar" style="background: var(--sofka-orange);"></div>
+        <p class="subtitle">Del DOM a la IA — Guía práctica para QA Automation</p>
+        <div class="tags">
+          <span class="badge badge-green">CSS Selectors</span>
+          <span class="badge badge-purple">XPath Avanzado</span>
+          <span class="badge badge-red">Elementos Dinámicos</span>
+          <span class="badge badge-yellow">IA & Buenas Prácticas</span>
+        </div>
+        <p class="brand-line">Better digital experiences. Every day.</p>
+      </section>
+
+      <!-- ======================= SLIDE 2: EL DOM ======================= -->
+      <section data-transition="slide">
+        <div class="section-label">Fundamento</div>
+        <h2>El DOM (Document Object Model)</h2>
+        <div class="accent-bar"></div>
+        <div class="two-col">
+          <div>
+            <pre><code class="language-html">&lt;form id="login-form"&gt;
+  &lt;input id="email" type="text"&gt;
+  &lt;input id="password" type="password"&gt;
+  &lt;button id="login-btn"&gt;Login&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            <div style="margin-top: 14px;">
+              <div class="card" style="padding: 14px; border-left: 4px solid var(--sofka-orange);">
+                <h4>Clave para automatización</h4>
+                <p>Selenium <strong>no ve la interfaz visual</strong>, interactúa con los <span class="highlight-text">nodos del DOM</span>. Cada test localiza un nodo y opera sobre él.</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="dom-tree">
+              <span class="node">document</span><br>
+              <span class="connector">&nbsp;&nbsp;└── </span><span class="node">&lt;html&gt;</span><br>
+              <span class="connector">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── </span><span class="node">&lt;body&gt;</span><br>
+              <span class="connector">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── </span><span class="node">&lt;form&gt;</span> <span class="attr">id="login-form"</span><br>
+              <span class="connector">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── </span><span class="node">&lt;input&gt;</span> <span class="attr">id="email"</span><br>
+              <span class="connector">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── </span><span class="node">&lt;input&gt;</span> <span class="attr">id="password"</span><br>
+              <span class="connector">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── </span><span class="node">&lt;button&gt;</span> <span class="attr">id="login-btn"</span>
+            </div>
+            <div class="card-grid cols-3" style="margin-top: 14px;">
+              <div class="card" style="text-align:center; padding: 12px;">
+                <h4 style="color: var(--sofka-orange);">Parent</h4>
+                <p>Nodo padre</p>
+              </div>
+              <div class="card" style="text-align:center; padding: 12px;">
+                <h4 style="color: var(--sofka-violet);">Child</h4>
+                <p>Nodo hijo</p>
+              </div>
+              <div class="card" style="text-align:center; padding: 12px;">
+                <h4 style="color: var(--sofka-teal);">Sibling</h4>
+                <p>Hermano</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= SLIDE 3: DEVTOOLS & WEBELEMENTS ======================= -->
+      <section class="full-slide" data-transition="slide">
+        <div class="section-label">Inspección & Interacción</div>
+        <h2>DevTools & WebElements</h2>
+        <div class="accent-bar"></div>
+        <div class="two-col">
+          <div>
+            <h3 style="margin-top:0;">Inspección en DevTools</h3>
+            <pre><code class="language-html">&lt;!-- Elemento inspeccionado --&gt;
+&lt;input id="email"
+       name="email"
+       type="text"
+       class="input-field"&gt;</code></pre>
+            <div class="card-grid cols-2" style="margin-top: 12px;">
+              <div class="card" style="padding: 12px;">
+                <h4 style="color: var(--sofka-orange);">id</h4>
+                <p>Mejor ancla</p>
+              </div>
+              <div class="card" style="padding: 12px;">
+                <h4 style="color: var(--sofka-violet);">name</h4>
+                <p>Formularios</p>
+              </div>
+              <div class="card" style="padding: 12px;">
+                <h4 style="color: var(--sofka-teal);">data-*</h4>
+                <p>Para QA</p>
+              </div>
+              <div class="card" style="padding: 12px;">
+                <h4 style="color: var(--sofka-green);">class</h4>
+                <p>Semántica</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-top:0;">WebElement en Selenium</h3>
+            <pre><code class="language-java">// Localizar → representar → actuar
+WebElement loginBtn = driver
+    .findElement(By.id("login-btn"));
+
+// Acciones comunes
+loginBtn.click();
+loginBtn.sendKeys("texto");
+loginBtn.getText();
+loginBtn.getAttribute("class");</code></pre>
+            <div class="card" style="margin-top: 12px; border-left: 4px solid var(--sofka-orange);">
+              <h4>Paso crítico</h4>
+              <p>Si el selector es <strong>incorrecto o inestable</strong>, el test falla — no por un bug real, sino por mala localización.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= SLIDE 4: findElement vs findElements ======================= -->
+      <section class="compact-slide" data-transition="slide">
+        <div class="section-label">API de Selenium</div>
+        <h2>findElement() vs findElements()</h2>
+        <div class="accent-bar"></div>
+        <div class="vs-container">
+          <div class="card" style="border-color: rgba(255,126,8,0.25);">
+            <h4 style="color: var(--sofka-orange);">findElement()</h4>
+            <pre><code class="language-java">// Devuelve UN solo elemento
+WebElement email = driver
+    .findElement(By.id("email"));
+
+// ⚠️ Lanza NoSuchElementException
+// si no existe</code></pre>
+            <ul style="margin-top: 10px; color: var(--text-secondary);">
+              <li>Devuelve <code>WebElement</code></li>
+              <li>Lanza excepción si no existe</li>
+              <li>Uso: un elemento esperado</li>
+            </ul>
+          </div>
+          <div class="vs-divider">VS</div>
+          <div class="card" style="border-color: rgba(151,71,255,0.25);">
+            <h4 style="color: var(--sofka-violet);">findElements()</h4>
+            <pre><code class="language-java">// Devuelve LISTA de elementos
+List&lt;WebElement&gt; inputs = driver
+    .findElements(By.tagName("input"));
+
+// ✅ Lista vacía si no encuentra
+// (no lanza excepción)</code></pre>
+            <ul style="margin-top: 10px; color: var(--text-secondary);">
+              <li>Devuelve <code>List&lt;WebElement&gt;</code></li>
+              <li>Lista vacía = sin resultados</li>
+              <li>Uso: múltiples coincidencias</li>
+            </ul>
+          </div>
+        </div>
+        <pre style="margin-top: 16px;"><code class="language-java">// Ejemplo práctico: Contar inputs en un formulario
+List&lt;WebElement&gt; allInputs = driver.findElements(By.cssSelector("#login-form input"));
+System.out.println("Campos encontrados: " + allInputs.size()); // → 2</code></pre>
+      </section>
+
+      <!-- ======================= SLIDE 5: TIPOS DE LOCALIZADORES ======================= -->
+      <section class="compact-slide" data-transition="slide">
+        <div class="section-label">Estrategias</div>
+        <h2>Tipos de localizadores en Selenium</h2>
+        <div class="accent-bar"></div>
+        <pre><code class="language-java">// 8 estrategias de localización disponibles
+driver.findElement(By.id("email"));                           // ← ID único
+driver.findElement(By.name("username"));                      // ← Atributo name
+driver.findElement(By.className("login-button"));             // ← Clase CSS
+driver.findElement(By.tagName("input"));                      // ← Tag HTML
+driver.findElement(By.linkText("Login"));                     // ← Texto de enlace
+driver.findElement(By.partialLinkText("Log"));                // ← Texto parcial
+driver.findElement(By.cssSelector("#login-btn"));             // ← Selector CSS
+driver.findElement(By.xpath("//input[@id='email']"));         // ← Expresión XPath</code></pre>
+        <table>
+          <thead>
+            <tr><th>Estrategia</th><th>Estabilidad</th><th>Uso recomendado</th><th>⚠️ Advertencia</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>id</code></td><td><span class="badge badge-green">Muy alta</span></td><td>Primera opción siempre</td><td>Requiere IDs únicos y estables</td></tr>
+            <tr><td><code>name</code></td><td><span class="badge badge-green">Alta</span></td><td>Formularios</td><td>Asegurar unicidad real</td></tr>
+            <tr><td><code>cssSelector</code></td><td><span class="badge badge-green">Alta</span></td><td>Preferida sin ID</td><td>Evitar selectores posicionales</td></tr>
+            <tr><td><code>xpath</code></td><td><span class="badge badge-yellow">Alta*</span></td><td>Relaciones complejas</td><td>Evitar XPath absoluto</td></tr>
+            <tr><td><code>className</code></td><td><span class="badge badge-yellow">Media</span></td><td>Clase única distintiva</td><td>En Java, solo una clase</td></tr>
+            <tr><td><code>tagName</code></td><td><span class="badge badge-red">Baja</span></td><td>findElements()</td><td>No es único → peligroso</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ======================= SLIDE 6: JERARQUÍA + DIAGRAMA ======================= -->
+      <section class="center-slide" data-transition="slide">
+        <div class="section-label">Criterio profesional</div>
+        <h2>Jerarquia de seleccion</h2>
+        <div class="accent-bar"></div>
+        <div>
+            <div class="pyramid">
+              <div class="pyramid-level pyr-1" data-fragment-index="1" class="fragment">🥇 <code>By.id("email")</code></div>
+              <div class="arrow-down">▼</div>
+              <div class="pyramid-level pyr-2" data-fragment-index="2" class="fragment">🥈 <code>By.name("username")</code> / <code>data-testid</code></div>
+              <div class="arrow-down">▼</div>
+              <div class="pyramid-level pyr-3" data-fragment-index="3" class="fragment">🥉 <code>By.cssSelector("button.login-btn")</code></div>
+              <div class="arrow-down">▼</div>
+              <div class="pyramid-level pyr-4" data-fragment-index="4" class="fragment">4️⃣ <code>By.xpath("//label[text()='...']/following::input")</code></div>
+            </div>
+            <div class="card" style="margin-top: 10px; border-left: 4px solid var(--sofka-orange);">
+              <p><strong>Regla:</strong> Usar el localizador más simple y estable que funcione. Solo bajar en la jerarquía cuando es necesario.</p>
+            </div>
+        </div>
+      </section>
+
+      <!-- ======================= SLIDE 6B: FLUJO DE DECISION ======================= -->
+      <section class="slide-dark flow-image-slide" data-transition="fade" data-background-image="../resources/flujo_decision.png" data-background-size="contain" data-background-position="center" data-background-repeat="no-repeat" data-background-color="#000">
+      </section>
+
+      <!-- ======================= SLIDE 7: CSS SELECTORS ======================= -->
+      <section class="compact-slide" data-transition="slide">
+        <div class="section-label">Selectores avanzados</div>
+        <h2>CSS selectors en Selenium</h2>
+        <div class="accent-bar"></div>
+        <div class="two-col">
+          <div>
+            <h3 style="margin-top:0;">Sintaxis clave</h3>
+            <pre><code class="language-python">from selenium.webdriver.common.by import By
+
+# ID como CSS
+btn = driver.find_element(By.CSS_SELECTOR, "#login")
+
+# Atributo exacto
+email = driver.find_element(By.CSS_SELECTOR,
+    "input[name='email']")
+
+# Atributo dedicado para testing
+cart = driver.find_element(By.CSS_SELECTOR,
+    "[data-testid='cart-icon']")
+
+# Prefijo (id dinámico con parte estable)
+el = driver.find_element(By.CSS_SELECTOR,
+    "input[id^='user_']")
+
+# Contiene
+btn = driver.find_element(By.CSS_SELECTOR,
+    "button[class*='primary']")
+
+# Sufijo
+el = driver.find_element(By.CSS_SELECTOR,
+    "button[id$='_login']")</code></pre>
+          </div>
+          <div>
+            <h3 style="margin-top:0;">Operadores de atributo</h3>
+            <table>
+              <thead><tr><th>Operador</th><th>Significado</th><th>CSS</th></tr></thead>
+              <tbody>
+                <tr><td><code>=</code></td><td>Exacto</td><td><code>[name='email']</code></td></tr>
+                <tr><td><code>^=</code></td><td>Empieza con</td><td><code>[id^='user_']</code></td></tr>
+                <tr><td><code>$=</code></td><td>Termina con</td><td><code>[id$='_login']</code></td></tr>
+                <tr><td><code>*=</code></td><td>Contiene</td><td><code>[class*='primary']</code></td></tr>
+              </tbody>
+            </table>
+            <div class="card-grid cols-2" style="margin-top: 10px;">
+              <div class="card" style="border-left: 3px solid var(--sofka-green);">
+                <h4>✅ Ventajas</h4>
+                <ul>
+                  <li>Sintaxis compacta y legible</li>
+                  <li>Fácil depurar en DevTools</li>
+                  <li>Match parcial: IDs dinámicos</li>
+                </ul>
+              </div>
+              <div class="card" style="border-left: 3px solid var(--sofka-orange);">
+                <h4>⚠️ Limitaciones</h4>
+                <ul>
+                  <li>Sin parent (no sube)</li>
+                  <li><code>nth-child</code> frágil</li>
+                  <li>Sin selección por texto</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= SLIDE 8: XPATH AVANZADO ======================= -->
+      <section data-transition="slide">
+        <div class="section-label">XPath avanzado</div>
+        <h2>XPath: funciones & ejes</h2>
+        <div class="accent-bar"></div>
+        <div class="two-col">
+          <div>
+            <h3 style="margin-top:0;">Funciones clave</h3>
+            <pre><code class="language-xpath">// contains() → ¿contiene la cadena?
+//button[contains(@class,'primary')]
+
+// starts-with() → ¿comienza con...?
+//*[starts-with(@id,'user_')]
+
+// normalize-space() → limpia espacios
+//*[normalize-space()='Login']
+
+// text() → nodo de texto
+//a[text()='Contact']
+//button[contains(text(),'Login')]
+
+// Combinaciones poderosas
+//button[contains(@class,'login-btn')
+  and normalize-space()='Iniciar sesión']</code></pre>
+          </div>
+          <div>
+            <h3 style="margin-top:0;">Ejes (Axes) para navegar</h3>
+            <pre><code class="language-xpath">// parent → ir al padre
+//*[@id='username']/parent::div
+
+// ancestor → subir al ancestro
+//*[@id='username']/ancestor::form
+
+// following-sibling → hermano siguiente
+//label[normalize-space()='Username']
+  /following-sibling::input
+
+// following → siguiente en el DOM
+//label[normalize-space()='Username']
+  /following::input[1]</code></pre>
+            <div class="card" style="margin-top: 10px; border-left: 4px solid var(--sofka-violet);">
+              <h4>Cuándo usar XPath</h4>
+              <ul>
+                <li>Label → Input sin IDs</li>
+                <li>Tablas: anclar por celda</li>
+                <li>IDs dinámicos + texto estable</li>
+                <li>Navegar relaciones complejas</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= SLIDE 9: CSS vs XPATH TABLA ======================= -->
+      <section class="slide-dark" data-transition="slide">
+        <div class="section-label">Referencia rápida</div>
+        <h2>CSS vs XPath — tabla de selectores</h2>
+        <div class="accent-bar"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>HTML</th>
+              <th>CSS Selector</th>
+              <th>XPath</th>
+              <th>¿Por qué?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>&lt;button id="login"&gt;</code></td>
+              <td><code>#login</code></td>
+              <td><code>//button[@id='login']</code></td>
+              <td><span class="badge badge-green">ID único</span></td>
+            </tr>
+            <tr>
+              <td><code>&lt;input name="email"&gt;</code></td>
+              <td><code>input[name='email']</code></td>
+              <td><code>//input[@name='email']</code></td>
+              <td><span class="badge badge-green">Name estable</span></td>
+            </tr>
+            <tr>
+              <td><code>&lt;div data-testid="cart"&gt;</code></td>
+              <td><code>[data-testid='cart']</code></td>
+              <td><code>//*[@data-testid='cart']</code></td>
+              <td><span class="badge badge-purple">Atributo QA</span></td>
+            </tr>
+            <tr>
+              <td><code>&lt;button id="btn_123_login"&gt;</code></td>
+              <td><code>button[id*='_login']</code></td>
+              <td><code>//button[contains(@id,'_login')]</code></td>
+              <td><span class="badge badge-yellow">ID dinámico</span></td>
+            </tr>
+            <tr>
+              <td><code>&lt;input id="user_9876"&gt;</code></td>
+              <td><code>input[id^='user_']</code></td>
+              <td><code>//input[starts-with(@id,'user_')]</code></td>
+              <td><span class="badge badge-yellow">Prefijo estable</span></td>
+            </tr>
+            <tr>
+              <td><code>&lt;label&gt;Username&lt;/label&gt;&lt;input&gt;</code></td>
+              <td><em style="opacity:0.5">CSS no puede</em></td>
+              <td><code>//label[normalize-space()='Username']/following::input[1]</code></td>
+              <td><span class="badge badge-red">Solo XPath</span></td>
+            </tr>
+            <tr>
+              <td><code>&lt;div class="toast"&gt; Saved! &lt;/div&gt;</code></td>
+              <td><code>div.toast</code></td>
+              <td><code>//div[contains(@class,'toast') and normalize-space()='Saved!']</code></td>
+              <td><span class="badge badge-purple">normalize-space</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ======================= SLIDE 10: ELEMENTOS DINÁMICOS ======================= -->
+      <section class="compact-slide" data-transition="slide">
+        <div class="section-label">Sincronización</div>
+        <h2>Elementos dinámicos & esperas</h2>
+        <div class="accent-bar"></div>
+        <div class="two-col">
+          <div>
+            <h3 style="margin-top:0;">Espera Explícita (recomendada)</h3>
+            <pre><code class="language-python"># Python
+from selenium.webdriver.support.ui import WebDriverWait
+
+wait = WebDriverWait(driver, timeout=10)
+
+# Esperar por condición
+wait.until(
+    lambda d: d.find_element(
+        By.XPATH,
+        "//*[normalize-space()='Hello World!']"
+    ).is_displayed()
+)</code></pre>
+            <pre><code class="language-java">// Java
+WebDriverWait wait = new WebDriverWait(
+    driver, Duration.ofSeconds(10)
+);
+
+wait.until(d ->
+    d.findElement(By.xpath(
+        "//*[normalize-space()='Hello World!']"
+    )).isDisplayed()
+);</code></pre>
+          </div>
+          <div>
+            <h3 style="margin-top:0;">StaleElementReferenceException</h3>
+            <div class="card" style="border-left: 4px solid var(--sofka-orange);">
+              <h4>¿Qué es?</h4>
+              <p>La referencia al elemento quedó <strong>obsoleta</strong>: el DOM se re-renderizó y el <code>WebElement</code> apunta a un nodo que ya no existe.</p>
+            </div>
+            <div class="card" style="margin-top: 6px; border-left: 4px solid var(--sofka-green);">
+              <h4>✅ Mitigación</h4>
+              <ul>
+                <li>Re-localizar justo antes de interactuar</li>
+                <li>No guardar <code>WebElement</code> largo tiempo</li>
+                <li>Esperar staleness + re-find</li>
+              </ul>
+            </div>
+            <div class="card" style="margin-top: 6px; border-left: 4px solid rgba(255,255,255,0.15);">
+              <h4>🚫 Anti-patrones</h4>
+              <ul>
+                <li><code>Thread.sleep(5000)</code> → lento y frágil</li>
+                <li>Mezclar waits implícitos + explícitos</li>
+                <li>IDs dinámicos con selector grabado</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= SLIDE 11: IA PARA SELECTORES ======================= -->
+      <section class="compact-slide" data-transition="slide">
+        <div class="section-label">Herramientas modernas</div>
+        <h2>IA para generar selectores robustos</h2>
+        <div class="accent-bar"></div>
+        <div class="two-col">
+          <div>
+            <div class="card-grid" style="grid-template-columns: 1fr;">
+              <div class="card" style="border-left: 4px solid var(--sofka-orange);">
+                <h4>ChatGPT</h4>
+                <p>Propone alternativas CSS/XPath, explica fragilidad, genera versiones robustas</p>
+              </div>
+              <div class="card" style="border-left: 4px solid var(--sofka-violet);">
+                <h4>GitHub Copilot</h4>
+                <p>Sugiere código en el IDE, acepta instrucciones en comentarios</p>
+              </div>
+              <div class="card" style="border-left: 4px solid var(--sofka-teal);">
+                <h4>SelectorsHub</h4>
+                <p>Editor/verificador XPath & CSS con autogeneración en DevTools</p>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 10px; border-left: 4px solid #1A1A1A;">
+              <h4>Riesgos</h4>
+              <ul>
+                <li><strong>Alucinaciones:</strong> atributos inventados</li>
+                <li><strong>Seguridad:</strong> revisar siempre</li>
+                <li><strong>Privacidad:</strong> no pegar HTML sensible</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-top:0;">Prompt listo para usar</h3>
+            <div class="prompt-box">Actúa como QA Automation Senior en Selenium.
+Te daré un fragmento HTML. Devuélveme:
+1) Un selector CSS robusto
+2) Un XPath relativo robusto
+3) Una alternativa "plan B"
+
+Reglas:
+- Evita XPath absoluto (/html/...)
+- Evita índices [3] salvo justificación
+- Prefiere: name, aria-label, data-testid
+- IDs dinámicos → contains() / starts-with()
+- Texto → normalize-space()
+
+Fragmento HTML:
+&lt;PEGA AQUÍ EL HTML MÍNIMO&gt;</div>
+            <h3 style="margin-top:8px;">Pipeline humano + IA</h3>
+            <div class="card-grid cols-4 pipeline-grid">
+              <div class="card" style="text-align:center; border-top: 3px solid var(--sofka-orange);">
+                <p class="step">01</p>
+                <p><strong>Inspeccionar</strong><br>DevTools</p>
+              </div>
+              <div class="card" style="text-align:center; border-top: 3px solid var(--sofka-violet);">
+                <p class="step">02</p>
+                <p><strong>Pedir 3</strong><br>alternativas</p>
+              </div>
+              <div class="card" style="text-align:center; border-top: 3px solid var(--sofka-teal);">
+                <p class="step">03</p>
+                <p><strong>Verificar</strong><br>DevTools</p>
+              </div>
+              <div class="card" style="text-align:center; border-top: 3px solid var(--sofka-green);">
+                <p class="step">04</p>
+                <p><strong>Integrar</strong><br>Page Object</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= SLIDE 13: BUENAS PRÁCTICAS ======================= -->
+      <section class="slide-dark" data-transition="slide">
+        <div class="section-label">Calidad</div>
+        <h2>Buenas prácticas & checklist de selectores</h2>
+        <div class="accent-bar"></div>
+        <div class="two-col">
+          <div>
+            <h3 style="margin-top: 0;">Checklist antes de aprobar PR</h3>
+            <ul class="checklist">
+              <li><span class="check-icon">☑️</span> El selector es <strong>único</strong> — apunta al elemento correcto</li>
+              <li><span class="check-icon">☑️</span> Es <strong>estable</strong> — no depende de índices o rutas absolutas</li>
+              <li><span class="check-icon">☑️</span> Es <strong>legible</strong> — se entiende sin inspeccionar el DOM</li>
+              <li><span class="check-icon">☑️</span> Usa <strong>anclas semánticas</strong>: id, name, data-testid, aria-label</li>
+              <li><span class="check-icon">☑️</span> Está <strong>encapsulado</strong> en Page Objects</li>
+              <li><span class="check-icon">☑️</span> Tiene <strong>sincronización</strong> correcta (espera explícita)</li>
+              <li><span class="check-icon">☑️</span> Falla con <strong>mensaje claro</strong> (timeout bien elegido)</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="margin-top: 0;">Reglas de oro</h3>
+            <div class="card" style="border-left: 4px solid var(--sofka-green);">
+              <h4>Hacer</h4>
+              <ul>
+                <li>Esperas <strong>explícitas</strong> con condiciones</li>
+                <li>Selectores <strong>cortos y legibles</strong></li>
+                <li>Acordar <code>data-testid</code> con desarrollo</li>
+                <li>Encapsular en <strong>Page Objects</strong></li>
+                <li>Verificar unicidad en DevTools</li>
+              </ul>
+            </div>
+            <div class="card" style="margin-top: 10px; border-left: 4px solid var(--sofka-orange);">
+              <h4>No hacer</h4>
+              <ul>
+                <li><code>Thread.sleep()</code> como solución</li>
+                <li>Mezclar waits implícitos + explícitos</li>
+                <li>XPath absoluto <code>/html/body/...</code></li>
+                <li><code>nth-child</code> sin justificación</li>
+                <li><code>By.className</code> con múltiples clases</li>
+                <li>Duplicar selectores en múltiples tests</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= SLIDE 14: EJERCICIO PRÁCTICO ======================= -->
+      <section class="compact-slide" data-transition="slide">
+        <div class="section-label">Laboratorio</div>
+        <h2>Ejercicios prácticos</h2>
+        <div class="accent-bar"></div>
+        <div class="three-col">
+          <div>
+            <h3 style="margin-top:0;">1. Login Happy Path</h3>
+            <pre><code class="language-python"># practice.expandtesting.com/login
+wait = WebDriverWait(driver, 10)
+
+# CSS por ID (estable)
+driver.find_element(By.CSS_SELECTOR,
+    "#username").send_keys("practice")
+driver.find_element(By.CSS_SELECTOR,
+    "#password").send_keys(
+    "SuperSecretPassword!")
+
+# XPath por texto
+driver.find_element(By.XPATH,
+    "//button[normalize-space()="
+    "'Login']").click()
+
+# Espera + aserción
+wait.until(
+  lambda d: "/secure" in d.current_url)
+msg = driver.find_element(
+  By.CSS_SELECTOR,
+  "div#flash-message").text
+assert "secure area" in msg</code></pre>
+          </div>
+          <div>
+            <h3 style="margin-top:0;">2. Carga Dinámica</h3>
+            <pre><code class="language-python"># .../dynamic-loading/1
+wait = WebDriverWait(driver, 10)
+
+# Click en Start
+driver.find_element(By.XPATH,
+    "//button[normalize-space()"
+    "='Start']").click()
+
+# Esperar "Hello World!"
+hello = wait.until(
+  lambda d: d.find_element(
+    By.XPATH,
+    "//*[normalize-space()="
+    "'Hello World!']"))
+assert hello.is_displayed()</code></pre>
+          </div>
+          <div>
+            <h3 style="margin-top:0;">3. ID Dinámico</h3>
+            <pre><code class="language-python"># .../dynamic-id
+xpath = ("//button["
+  "normalize-space()="
+  "'Button with Dynamic ID']")
+
+# Click 1
+driver.find_element(
+    By.XPATH, xpath).click()
+
+# Refresh → ID cambia, texto NO
+driver.refresh()
+driver.find_element(
+    By.XPATH, xpath).click()
+# ✅ Funciona porque no
+# depende del ID!</code></pre>
+          </div>
+        </div>
+        <div class="card" style="margin-top:10px; border-left:4px solid var(--sofka-orange); padding:10px 14px;">
+          <p style="font-size:0.5em; margin:0;"><strong>Sitio de práctica:</strong> <code>practice.expandtesting.com</code> — Todos los ejercicios usan esperas explícitas y selectores robustos (sin IDs dinámicos).</p>
+        </div>
+      </section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <!-- Reveal.js -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+
+  <!-- Mermaid.js -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#1a1a1a',
+        primaryTextColor: '#FF7E08',
+        primaryBorderColor: '#FF7E08',
+        lineColor: '#B8A894',
+        secondaryColor: '#111111',
+        tertiaryColor: '#000000',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '13px'
+      },
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+
+    // Initialize Reveal.js
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      center: false,
+      plugins: [RevealHighlight, RevealNotes]
+    }).then(() => {
+      // Render mermaid diagrams after reveal is ready
+      mermaid.run({ querySelector: '.mermaid' });
+    });
+
+    // Re-render mermaid on slide change (for hidden slides)
+    Reveal.on('slidechanged', event => {
+      const mermaidEls = event.currentSlide.querySelectorAll('.mermaid:not([data-processed])');
+      if (mermaidEls.length > 0) {
+        mermaid.run({ nodes: mermaidEls });
+      }
+    });
+  </script>
+</body>
+</html>
